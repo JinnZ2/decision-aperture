@@ -1,0 +1,77 @@
+{
+  "schema": "da-frame/1",
+  "created": "2026-09-20T14:23:02Z",
+  "human": {
+    "state": "DECLARED",
+    "value": "solo_dev",
+    "provenance": {
+      "by": "cli",
+      "at": "2026-09-20T14:23:02Z"
+    }
+  },
+  "ai": {
+    "state": "DECLARED",
+    "value": "claude-3.7",
+    "provenance": {
+      "by": "cli",
+      "at": "2026-09-20T14:23:02Z"
+    }
+  },
+  "project": {
+    "state": "DECLARED",
+    "value": "greenfield-script",
+    "provenance": {
+      "by": "cli",
+      "at": "2026-09-20T14:23:02Z"
+    }
+  },
+  "environment": {
+    "state": "UNMAPPED",
+    "value": null,
+    "provenance": null
+  },
+  "constraints": {
+    "state": "UNMAPPED",
+    "value": [],
+    "provenance": null
+  },
+  "instruments": [
+    {
+      "name": "crosslink_scan",
+      "kind": "scanner",
+      "locator": "../vibe-code-audit/crosslink_scan.py",
+      "surface_map": [
+        "api_shape",
+        "dependency"
+      ],
+      "state": "UNMEASURED",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:23:02Z"
+      },
+      "added": "2026-09-20T14:23:02Z"
+    }
+  ],
+  "knowns": [
+    {
+      "claim": "tests run locally",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:23:02Z"
+      },
+      "at": "2026-09-20T14:23:02Z"
+    }
+  ],
+  "unknowns": [],
+  "unverified": [
+    {
+      "claim": "CI is green",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:23:02Z"
+      },
+      "at": "2026-09-20T14:23:02Z"
+    }
+  ],
+  "notes": []
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "da-frame/1",
+  "created": "2026-09-20T14:24:54Z",
+  "human": {
+    "state": "DECLARED",
+    "value": "team_lead",
+    "provenance": {
+      "by": "cli",
+      "at": "2026-09-20T14:24:54Z"
+    }
+  },
+  "ai": {
+    "state": "DECLARED",
+    "value": "gpt-4o",
+    "provenance": {
+      "by": "cli",
+      "at": "2026-09-20T14:24:54Z"
+    }
+  },
+  "project": {
+    "state": "DECLARED",
+    "value": "legacy-monolith",
+    "provenance": {
+      "by": "cli",
+      "at": "2026-09-20T14:24:54Z"
+    }
+  },
+  "environment": {
+    "state": "UNMAPPED",
+    "value": null,
+    "provenance": null
+  },
+  "constraints": {
+    "state": "UNMAPPED",
+    "value": [],
+    "provenance": null
+  },
+  "instruments": [],
+  "knowns": [],
+  "unknowns": [
+    {
+      "claim": "which services own the schema",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:24:54Z"
+      },
+      "at": "2026-09-20T14:24:54Z"
+    }
+  ],
+  "unverified": [],
+  "notes": []
+}

@@ -1,0 +1,84 @@
+{
+  "schema": "da-experiment/1",
+  "experiment_id": "EXP-20260920-142510",
+  "at": "2026-09-20T14:25:10Z",
+  "frame": {
+    "schema": "da-frame/1",
+    "created": "2026-09-20T14:24:54Z",
+    "human": {
+      "state": "DECLARED",
+      "value": "team_lead",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:24:54Z"
+      }
+    },
+    "ai": {
+      "state": "DECLARED",
+      "value": "gpt-4o",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:24:54Z"
+      }
+    },
+    "project": {
+      "state": "DECLARED",
+      "value": "legacy-monolith",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:24:54Z"
+      }
+    },
+    "environment": {
+      "state": "UNMAPPED",
+      "value": null,
+      "provenance": null
+    },
+    "constraints": {
+      "state": "UNMAPPED",
+      "value": [],
+      "provenance": null
+    },
+    "instruments": [],
+    "knowns": [],
+    "unknowns": [
+      {
+        "claim": "which services own the schema",
+        "provenance": {
+          "by": "cli",
+          "at": "2026-09-20T14:24:54Z"
+        },
+        "at": "2026-09-20T14:24:54Z"
+      }
+    ],
+    "unverified": [],
+    "notes": []
+  },
+  "question": "When the cached value is wrong, what breaks -- and is serving stale worse than recomputing?",
+  "surface": "caching",
+  "predicted_usefulness": null,
+  "protocol": {
+    "profile_a": "fixtures/cache_profile_a.py",
+    "profile_b": "fixtures/cache_profile_b.py",
+    "friction_band": "high"
+  },
+  "measurements": {
+    "divergence": 0.7419,
+    "divergence_verdict": "DISCRIMINATES",
+    "divergence_note": "verdict is about STRUCTURAL divergence (AST / token multiset), stated as such; behavioral divergence without structural divergence is this proxy's named false negative",
+    "actual_usefulness": 0.3919,
+    "usefulness_explanation": "divergence 0.742 - friction_penalty 0.350 = raw 0.392, clamped to 0.392; threshold for 'discriminates' is 0.20"
+  },
+  "observations": [],
+  "deviations": [],
+  "unmeasured_areas": [
+    "behavioral divergence (structural proxy only)",
+    "long-term maintainability of either profile",
+    "friction of asking the human vs the AI"
+  ],
+  "provenance": {
+    "instrument": "usefulness_lab.py",
+    "version": "1",
+    "by": "experiment_runner"
+  }
+}

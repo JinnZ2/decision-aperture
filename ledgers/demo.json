@@ -1,0 +1,90 @@
+{
+  "schema": "da-ledger/2",
+  "request": "add caching to the app, store results in a database",
+  "created": "2026-09-20T14:17:23Z",
+  "budget": 5,
+  "status": "MAPPED",
+  "frame": null,
+  "entries": {
+    "D1": {
+      "surface": "persistence",
+      "matched": "store",
+      "consequence_class_prior": "TERMINAL",
+      "decomposes_into": [
+        "storage engine / format",
+        "durability requirement (what may be lost)",
+        "schema ownership (who may change the shape)",
+        "retention (what gets deleted, when)"
+      ],
+      "question_hypothesis": "What must still be true about this data after the process that wrote it is gone -- read by whom, changed by whom, kept for how long?",
+      "state": "RESOLVED",
+      "suppressed_by_budget": false,
+      "answer": "sqlite file, single writer, keep forever",
+      "provenance": {
+        "by": "user",
+        "at": "2026-09-20T14:17:23Z"
+      },
+      "history": [
+        {
+          "at": "2026-09-20T14:17:23Z",
+          "event": "exposed"
+        },
+        {
+          "at": "2026-09-20T14:17:23Z",
+          "event": "UNRESOLVED -> RESOLVED",
+          "by": "user"
+        }
+      ],
+      "frame_id": null,
+      "predicted_usefulness": null,
+      "actual_usefulness": null,
+      "discrimination": {
+        "tested": false,
+        "result": null,
+        "divergence": null,
+        "experiments": []
+      },
+      "dependencies": []
+    },
+    "D2": {
+      "surface": "caching",
+      "matched": "caching",
+      "consequence_class_prior": "REVERSIBLE",
+      "decomposes_into": [
+        "invalidation rule (when is a hit wrong)",
+        "scope (per-process, shared, distributed)",
+        "failure mode on miss/stale (recompute or serve)"
+      ],
+      "question_hypothesis": "When the cached value is wrong, what breaks -- and is serving a stale value ever worse than recomputing?",
+      "state": "DEFERRED",
+      "suppressed_by_budget": false,
+      "answer": null,
+      "provenance": {
+        "by": "user",
+        "at": "2026-09-20T14:17:23Z",
+        "reason": "pick cache after profiling"
+      },
+      "history": [
+        {
+          "at": "2026-09-20T14:17:23Z",
+          "event": "exposed"
+        },
+        {
+          "at": "2026-09-20T14:17:23Z",
+          "event": "UNRESOLVED -> DEFERRED",
+          "by": "user"
+        }
+      ],
+      "frame_id": null,
+      "predicted_usefulness": null,
+      "actual_usefulness": null,
+      "discrimination": {
+        "tested": false,
+        "result": null,
+        "divergence": null,
+        "experiments": []
+      },
+      "dependencies": []
+    }
+  }
+}

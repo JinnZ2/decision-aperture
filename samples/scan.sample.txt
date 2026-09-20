@@ -1,0 +1,17 @@
+MAPPED -- 3 decision surface(s), consequence-routed:
+  [TERMINAL] persistence  (matched: 'store')
+      - storage engine / format
+      - durability requirement (what may be lost)
+      - schema ownership (who may change the shape)
+      - retention (what gets deleted, when)
+      ? What must still be true about this data after the process that wrote it is gone -- read by whom, changed by whom, kept for how long?
+  [TERMINAL] security  (matched: 'secure')
+      - threat model (who is the adversary)
+      - identity boundary (who may do what)
+      - secret handling (where keys live)
+      ? Whose action must this prevent -- an outside attacker, another user, or the operator -- and what is the worst single thing that party could do?
+  [REVERSIBLE] caching  (matched: 'caching')
+      - invalidation rule (when is a hit wrong)
+      - scope (per-process, shared, distributed)
+      - failure mode on miss/stale (recompute or serve)
+      ? When the cached value is wrong, what breaks -- and is serving a stale value ever worse than recomputing?

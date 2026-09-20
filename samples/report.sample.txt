@@ -1,0 +1,8 @@
+UNRESOLVED DECISIONS: 0 (printed first, on purpose)
+  none -- every detected surface carries an owned state
+
+OWNED DECISIONS: 2
+  D1  persistence    RESOLVED by user: sqlite file, single writer, keep forever
+  D2  caching        DEFERRED by user: pick cache after profiling
+
+DISCRIMINATION: 2 of 2 questions untested

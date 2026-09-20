@@ -1,0 +1,109 @@
+{
+  "schema": "da-experiment/1",
+  "experiment_id": "EXP-20260920-142510",
+  "at": "2026-09-20T14:25:10Z",
+  "frame": {
+    "schema": "da-frame/1",
+    "created": "2026-09-20T14:23:02Z",
+    "human": {
+      "state": "DECLARED",
+      "value": "solo_dev",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:23:02Z"
+      }
+    },
+    "ai": {
+      "state": "DECLARED",
+      "value": "claude-3.7",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:23:02Z"
+      }
+    },
+    "project": {
+      "state": "DECLARED",
+      "value": "greenfield-script",
+      "provenance": {
+        "by": "cli",
+        "at": "2026-09-20T14:23:02Z"
+      }
+    },
+    "environment": {
+      "state": "UNMAPPED",
+      "value": null,
+      "provenance": null
+    },
+    "constraints": {
+      "state": "UNMAPPED",
+      "value": [],
+      "provenance": null
+    },
+    "instruments": [
+      {
+        "name": "crosslink_scan",
+        "kind": "scanner",
+        "locator": "../vibe-code-audit/crosslink_scan.py",
+        "surface_map": [
+          "api_shape",
+          "dependency"
+        ],
+        "state": "UNMEASURED",
+        "provenance": {
+          "by": "cli",
+          "at": "2026-09-20T14:23:02Z"
+        },
+        "added": "2026-09-20T14:23:02Z"
+      }
+    ],
+    "knowns": [
+      {
+        "claim": "tests run locally",
+        "provenance": {
+          "by": "cli",
+          "at": "2026-09-20T14:23:02Z"
+        },
+        "at": "2026-09-20T14:23:02Z"
+      }
+    ],
+    "unknowns": [],
+    "unverified": [
+      {
+        "claim": "CI is green",
+        "provenance": {
+          "by": "cli",
+          "at": "2026-09-20T14:23:02Z"
+        },
+        "at": "2026-09-20T14:23:02Z"
+      }
+    ],
+    "notes": []
+  },
+  "question": "When the cached value is wrong, what breaks -- and is serving stale worse than recomputing?",
+  "surface": "caching",
+  "predicted_usefulness": null,
+  "protocol": {
+    "profile_a": "fixtures/cache_profile_a.py",
+    "profile_b": "fixtures/cache_profile_b.py",
+    "friction_band": "low"
+  },
+  "measurements": {
+    "divergence": 0.7419,
+    "divergence_verdict": "DISCRIMINATES",
+    "divergence_note": "verdict is about STRUCTURAL divergence (AST / token multiset), stated as such; behavioral divergence without structural divergence is this proxy's named false negative",
+    "actual_usefulness": 0.7419,
+    "usefulness_explanation": "divergence 0.742 - friction_penalty 0.000 = raw 0.742, clamped to 0.742; threshold for 'discriminates' is 0.20"
+  },
+  "observations": [],
+  "deviations": [],
+  "unmeasured_areas": [
+    "behavioral divergence (structural proxy only)",
+    "long-term maintainability of either profile",
+    "friction of asking the human vs the AI"
+  ],
+  "provenance": {
+    "instrument": "usefulness_lab.py",
+    "version": "1",
+    "by": "experiment_runner"
+  }
+}

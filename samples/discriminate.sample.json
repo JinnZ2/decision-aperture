@@ -1,0 +1,8 @@
+{
+  "schema": "da-discrimination/1",
+  "question": null,
+  "result": "DISCRIMINATES",
+  "divergence": 0.7419,
+  "threshold": 0.2,
+  "note": "verdict is about STRUCTURAL divergence (AST / token multiset), stated as such; behavioral divergence without structural divergence is this proxy's named false negative"
+}
