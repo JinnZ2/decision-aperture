@@ -1,0 +1,72 @@
+# CI for decision-aperture.
+#
+# What this workflow is: the claim table's "recomputable by anyone"
+# promise, run continuously. DA-claim reproducibility is stated per
+# claim; this workflow exercises the ones that are machine-runnable on
+# every push.
+#
+# What this workflow is NOT: a judge of question quality. It verifies
+# the instruments (scan, ledger, discriminate, frame, lab) behave as
+# the claim table says. Usefulness remains an experimental variable;
+# CI does not pre-decide it.
+
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: module selftests
+        run: |
+          python3 aperture_scan.py --selftest
+          python3 discriminate.py --selftest
+          python3 assessment_frame.py --selftest
+          python3 usefulness_lab.py --selftest
+
+      - name: check suite
+        run: python3 test_aperture.py
+
+      - name: the two prohibitions, exercised from the CLI
+        # DA_006 / DA_007: silent resolve must be refused. Run the
+        # forbidden calls against a throwaway ledger and assert the
+        # refusals fire, so the prohibition is measured in CI, not
+        # only in the suite.
+        run: |
+          python3 decision_ledger.py --new "add caching" > /tmp/l.json
+          python3 decision_ledger.py /tmp/l.json --resolve D1 \
+              --answer "redis" && exit 1 || echo "refused: no provenance"
+          python3 decision_ledger.py /tmp/l.json --resolve D1 \
+              --by user && exit 1 || echo "refused: no answer"
+          python3 decision_ledger.py /tmp/l.json --resolve D1 \
+              --by user --answer "redis" > /dev/null
+          echo "legal resolve accepted with answer + provenance"
+
+      - name: shipped demo experiment reproduces
+        # The frame-delta evidence in experiments/ is the repo's
+        # headline finding; re-run both profiles and confirm the
+        # divergence measurements still reproduce.
+        run: |
+          python3 discriminate.py --artifacts \
+              fixtures/cache_profile_a.py fixtures/cache_profile_b.py \
+              | grep -q DISCRIMINATES
+          python3 discriminate.py --artifacts \
+              fixtures/color_profile_a.py fixtures/color_profile_b.py \
+              | grep -q DOES_NOT_DISCRIMINATE
+          echo "demo experiment reproduces"
