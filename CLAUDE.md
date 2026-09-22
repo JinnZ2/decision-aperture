@@ -186,7 +186,7 @@ python3 decision_ledger.py LEDGER --resolve D2 --by user --answer "redis"
 python3 decision_ledger.py LEDGER --defer D3 --by user --reason "..."
 python3 decision_ledger.py LEDGER --report
 
-python3 discriminate.py a.py b.py
+python3 discriminate.py --artifacts a.py b.py [--question "..."] [--json]
 python3 usefulness_lab.py run --frame frame.json --question "..." \
         --surface caching --profile-a fixtures/cache_profile_a.py \
         --profile-b fixtures/cache_profile_b.py --friction low --out exp.json
