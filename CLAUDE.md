@@ -1,6 +1,8 @@
 # decision-aperture
 
-Measures the decision surface of a request before the code is written, and treats the usefulness of its own questions as an experimental variable.
+> A CC0 decision-aperture layer for AI-assisted software development.
+
+Source: README.md
 
 <!-- clone-refspec-note v1.1 -->
 ## Cloning and pushing
