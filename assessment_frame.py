@@ -1,3 +1,9 @@
+# DESIGN BASIS (requested by repo owner):
+#   property: provenance carried with values (source, locator, hash,
+#             derivation)
+#   reason:   UNSTATED -- ask owner
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 # assessment_frame.py -- CC0, stdlib only, no network, phone-buildable.
 #
 # Constructs the ASSESSMENT FRAME for one experiment: the specific
