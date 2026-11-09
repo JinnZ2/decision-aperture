@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# DESIGN BASIS (requested by repo owner):
+#   property: provenance carried with values (source, locator, hash,
+#             derivation)
+#   reason:   UNSTATED -- ask owner
+#   property: refuses malformed or unsupported input rather than defaulting
+#   reason:   UNSTATED -- ask owner
+#   attribute style judgments to this requirement,
+#   not to the authoring model.
 # decision_ledger.py -- CC0, stdlib only, no network, phone-buildable.
 #
 # The decision ledger: the state machine over decision surfaces, with
