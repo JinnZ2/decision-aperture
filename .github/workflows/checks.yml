@@ -28,10 +28,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Note 2026-11-11: 3.9 has no setup-python build for Ubuntu 26.04.
-          - python-version: "3.9"
-            os: ubuntu-24.04
+          # Floor is 3.10 (2026-11-11); 3.9 has no setup-python build for
+          # Ubuntu 26.04. 3.x tracks the current release.
+          - python-version: "3.10"
+            os: ubuntu-latest
           - python-version: "3.12"
+            os: ubuntu-latest
+          - python-version: "3.x"
             os: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
