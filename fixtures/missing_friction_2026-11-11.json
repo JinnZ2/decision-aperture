@@ -1,0 +1,46 @@
+{
+  "kind": "correction_specimen",
+  "recorded_on": "2026-11-11",
+  "scope": "ILLUSTRATIVE direct function probes, not measured human usefulness",
+  "original_source_commit": "5f8d316dc76f1a722b70c616fcecc76926ed8283",
+  "original_source_url": "https://github.com/JinnZ2/decision-aperture/blob/5f8d316dc76f1a722b70c616fcecc76926ed8283/usefulness_lab.py",
+  "python": "3.14.8",
+  "original_contract": "It must not silently fill missing friction or divergence.",
+  "original_friction_mapping_entry": "None: 0.0",
+  "original_prediction_delta_expression": "abs(pred_val - (entry[\"actual_usefulness\"] or 0))",
+  "probes": [
+    {
+      "divergence": 0.6,
+      "friction_band": null,
+      "original_score": 0.6,
+      "original_explanation": "divergence 0.600 - friction_penalty 0.000 = raw 0.600, clamped to 0.600; threshold for 'discriminates' is 0.20",
+      "corrected_score": null,
+      "corrected_explanation": "UNMEASURED: friction not available"
+    },
+    {
+      "divergence": 0.6,
+      "friction_band": "low",
+      "original_score": 0.6,
+      "corrected_score": 0.6
+    },
+    {
+      "divergence": 0.6,
+      "friction_band": "unknown",
+      "original_score": null,
+      "original_explanation": "UNMEASURED: friction band not understood",
+      "corrected_score": null
+    }
+  ],
+  "ledger_probe": {
+    "predicted_usefulness": 0.8,
+    "actual_usefulness": null,
+    "original_prediction_delta": 0.8,
+    "corrected_prediction_delta": null
+  },
+  "regression_before_fix": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B test_aperture.py",
+    "checks": 82,
+    "failed": 11,
+    "note": "Expanded regression suite run before changing either implementation."
+  }
+}

@@ -372,6 +372,78 @@ check("lab.compare_reports_delta",
 check("lab.compare_no_universal_rank",
       "NOT evidence one question is universally" in comp["report"])
 
+# Missing friction is not the explicit low band or measured zero seconds.
+# These are regression probes, not measurements of human usefulness.
+for divergence in (0.6, 0.0):
+    score, explanation = ul.compute_usefulness(divergence, None)
+    check("lab.missing_friction_unmeasured.%s" % divergence,
+          score is None and explanation
+          == "UNMEASURED: friction not available",
+          repr((score, explanation)))
+for friction in ("low", 0, 0.0, "0"):
+    score, explanation = ul.compute_usefulness(0.6, friction)
+    check("lab.explicit_zero_penalty.%r" % friction,
+          score == 0.6 and "friction_penalty 0.000" in explanation)
+for friction in ("medium", "high", 12, "12"):
+    expected = {"medium": 0.45, "high": 0.25, 12: 0.4, "12": 0.4}
+    check("lab.measured_friction_unchanged.%r" % friction,
+          ul.compute_usefulness(0.6, friction)[0] == expected[friction])
+for friction in ("unknown", ""):
+    score, explanation = ul.compute_usefulness(0.6, friction)
+    check("lab.unrecognized_friction_unmeasured.%r" % friction,
+          score is None and explanation.startswith("UNMEASURED:"))
+check("lab.missing_divergence_still_unmeasured",
+      ul.compute_usefulness(None, "low")
+      == (None, "UNMEASURED: divergence not available"))
+
+missing_path = os.path.join(d_frame, "missing-friction.json")
+rec_missing = ul.run_experiment(
+    fp, "cache scope?", "caching", a_fix, b_fix, out_path=missing_path)
+check("lab.omitted_friction_preserves_divergence",
+      rec_missing["measurements"]["divergence"]
+      == rec["measurements"]["divergence"]
+      and rec_missing["measurements"]["divergence_verdict"]
+      == "DISCRIMINATES")
+check("lab.omitted_friction_preserves_frame_and_protocol",
+      rec_missing["frame"] == rec["frame"]
+      and rec_missing["protocol"]["friction_band"] is None
+      and rec_missing["protocol"]["profile_a"] == a_fix
+      and rec_missing["protocol"]["profile_b"] == b_fix)
+check("lab.omitted_friction_listed_unmeasured",
+      "friction input (not supplied)" in rec_missing["unmeasured_areas"])
+with open(missing_path, encoding="utf-8") as fh:
+    stored_missing = json.load(fh)
+check("lab.unmeasured_survives_json",
+      stored_missing["measurements"]["actual_usefulness"] is None
+      and stored_missing["protocol"]["friction_band"] is None
+      and stored_missing["measurements"]["usefulness_explanation"]
+      == "UNMEASURED: friction not available")
+
+cli_missing = run_py(
+    "usefulness_lab.py", "run", "--frame", fp, "--question", "cache scope?",
+    "--surface", "caching", "--profile-a", a_fix, "--profile-b", b_fix)
+cli_m = json.loads(cli_missing.stdout)
+check("lab.cli_omitted_friction_unmeasured",
+      cli_missing.returncode == 0
+      and cli_m["actual_usefulness"] is None
+      and cli_m["divergence"] == rec["measurements"]["divergence"]
+      and cli_m["usefulness_explanation"]
+      == "UNMEASURED: friction not available")
+
+comp_missing = ul.compare([e1, missing_path])
+check("lab.compare_missing_withholds_delta",
+      comp_missing["max_delta"] is None)
+check("lab.compare_missing_explained",
+      "usefulness: UNMEASURED" in comp_missing["report"]
+      and "UNMEASURED: friction not available" in comp_missing["report"]
+      and "usefulness not measured for both experiments"
+      in comp_missing["report"])
+comp_mixed = ul.compare([e1, e2, missing_path])
+check("lab.compare_mixed_keeps_measured_delta",
+      comp_mixed["max_delta"] == comp["max_delta"]
+      and comp_mixed["report"].count(
+          "usefulness not measured for both experiments") == 2)
+
 # ----------------------------------------------------------------------
 # 8. frame-scoped ledger
 # ----------------------------------------------------------------------
@@ -395,6 +467,52 @@ dl.record_discrimination(led7, "D1", {
     "experiment": rec2})
 check("ledger.suspect_is_frame_local",
       "frame-local evidence" in dl.report(led7))
+
+# Keep the measured structural result, not a fabricated usefulness error.
+led_missing = dl.new_ledger("add caching", ap.scan("add caching"), frame=f)
+dl.set_predicted_usefulness(led_missing, "D1", 0.8, rationale="probe")
+dl.record_discrimination(led_missing, "D1", {
+    "result": rec_missing["measurements"]["divergence_verdict"],
+    "divergence": rec_missing["measurements"]["divergence"],
+    "experiment": rec_missing})
+entry_missing = led_missing["entries"]["D1"]
+check("ledger.missing_usefulness_not_zero",
+      entry_missing["actual_usefulness"] is None
+      and entry_missing.get("usefulness_prediction_delta") is None)
+check("ledger.missing_usefulness_retains_discrimination",
+      entry_missing["discrimination"]["tested"]
+      and entry_missing["discrimination"]["result"] == "DISCRIMINATES"
+      and entry_missing["discrimination"]["divergence"] == 0.7419
+      and rec_missing["experiment_id"]
+      in entry_missing["discrimination"]["experiments"])
+check("ledger.missing_usefulness_reported",
+      "usefulness UNMEASURED" in dl.report(led_missing)
+      and "pred_delta" not in dl.report(led_missing))
+check("ledger.missing_usefulness_does_not_resolve",
+      entry_missing["state"] == "UNRESOLVED"
+      and entry_missing["answer"] is None
+      and entry_missing["provenance"] is None)
+
+# Explicit measured zero still has a numeric prediction error.
+dl.set_predicted_usefulness(led7, "D1", 0.8)
+dl.record_discrimination(led7, "D1", {
+    "result": "DOES_NOT_DISCRIMINATE", "divergence": 0.0,
+    "experiment": rec2})
+check("ledger.measured_zero_keeps_prediction_delta",
+      led7["entries"]["D1"]["actual_usefulness"] == 0.0
+      and led7["entries"]["D1"]["usefulness_prediction_delta"] == 0.8)
+
+# A new unmeasured result must not inherit the last measured delta.
+dl.record_discrimination(led6, "D1", {
+    "result": "DISCRIMINATES", "divergence": 0.7419,
+    "experiment": rec_missing})
+check("ledger.new_unmeasured_clears_previous_delta",
+      led6["entries"]["D1"]["actual_usefulness"] is None
+      and led6["entries"]["D1"].get("usefulness_prediction_delta") is None)
+dl.record_discrimination(led6, "D1", {
+    "result": "DISCRIMINATES", "divergence": 0.7419, "experiment": rec})
+check("ledger.measured_after_unmeasured_recovers_delta",
+      led6["entries"]["D1"]["usefulness_prediction_delta"] == 0.0581)
 
 print("-" * 60)
 print("checks: %d   failed: %d" % (CHECKS[0], len(FAILS)))

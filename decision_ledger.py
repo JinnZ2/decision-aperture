@@ -191,8 +191,11 @@ def record_discrimination(ledger, did, result):
             pred_val = pred.get("value")
         else:
             pred_val = pred
-        if pred_val is not None:
-            delta = abs(pred_val - (entry["actual_usefulness"] or 0))
+        # Note 2026-11-11: the old "(actual_usefulness or 0)" substituted
+        # zero for missing evidence. Reset any older delta for this result.
+        entry["usefulness_prediction_delta"] = None
+        if pred_val is not None and entry["actual_usefulness"] is not None:
+            delta = abs(pred_val - entry["actual_usefulness"])
             entry["usefulness_prediction_delta"] = round(delta, 4)
     entry["discrimination"] = disc
     if result.get("result") == "DOES_NOT_DISCRIMINATE":
@@ -272,6 +275,8 @@ def report(ledger):
                 d, disc["result"], disc.get("divergence"))
             if e.get("actual_usefulness") is not None:
                 line += ", usefulness %s" % e["actual_usefulness"]
+            else:
+                line += ", usefulness UNMEASURED"
             if e.get("usefulness_prediction_delta") is not None:
                 line += ", pred_delta %.3f" % e[
                     "usefulness_prediction_delta"]
