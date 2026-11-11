@@ -65,3 +65,17 @@ It does not re-score historical experiments or retroactively infer their
 missing costs. It does not fix unrelated input-validation, frame-identity,
 or cross-frame causal-inference questions; the existing scope limitations
 and unresolved findings remain in place.
+
+### Verification boundary: CI environment
+
+The [first PR run](https://github.com/JinnZ2/decision-aperture/actions/runs/43005893278)
+failed during Python 3.9 interpreter setup, before its test suite ran:
+`The version '3.9' with architecture 'x64' was not found for Ubuntu 26.04.`
+That is an environment availability result, not a failing Python 3.9 test.
+The Python 3.12 test steps completed, but matrix fail-fast marked that job
+cancelled after the other setup failed.
+
+The [Python build manifest](https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json)
+lists Ubuntu 24.04 builds for Python 3.9.25. The workflow now pins only the
+Python 3.9 job to Ubuntu 24.04, retains `ubuntu-latest` for Python 3.12, and
+disables matrix fail-fast so each job retains its own outcome.
