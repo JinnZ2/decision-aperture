@@ -22,10 +22,17 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      # A setup failure must not cancel another interpreter's evidence.
+      fail-fast: false
       matrix:
-        python-version: ["3.9", "3.12"]
+        include:
+          # Note 2026-11-11: 3.9 has no setup-python build for Ubuntu 26.04.
+          - python-version: "3.9"
+            os: ubuntu-24.04
+          - python-version: "3.12"
+            os: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 

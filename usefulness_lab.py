@@ -62,16 +62,22 @@ def compute_usefulness(divergence, friction_band, threshold=0.20):
     divergence: float in [0,1] or None
     friction_band: 'low' | 'medium' | 'high' | numeric seconds | None
 
+    None means unmeasured, not the explicit low band or zero seconds.
+    A measured divergence remains available even when usefulness is not.
+
     The function is deliberately simple and stated. A high-divergence,
     low-friction question is highly useful IN THIS FRAME. A high-
     divergence, high-friction question may not be worth asking again.
-    A low-divergence question is low-usefulness for discriminating
-    implementation paths, regardless of friction."""
+    Low divergence still describes structural discrimination; it does
+    not fill an unmeasured friction input."""
     if divergence is None:
         return None, "UNMEASURED: divergence not available"
+    # Note 2026-11-11: None previously mapped to 0.0 below. Preserve the
+    # original reading and correction in fixtures/missing_friction_2026-11-11.json.
+    if friction_band is None:
+        return None, "UNMEASURED: friction not available"
 
     friction_penalty = {
-        None: 0.0,
         "low": 0.0,
         "medium": 0.15,
         "high": 0.35,
@@ -134,10 +140,12 @@ def run_experiment(frame_path, question, surface, profile_a_path,
         ],
         "provenance": {
             "instrument": "usefulness_lab.py",
-            "version": "1",
+            "version": "2",
             "by": "experiment_runner",
         },
     }
+    if friction_band is None:
+        record["unmeasured_areas"].append("friction input (not supplied)")
     if out_path:
         with open(out_path, "w", encoding="utf-8") as fh:
             json.dump(record, fh, indent=2)
@@ -167,7 +175,11 @@ def compare(exp_paths):
         out.append("    frame: %s" % frame_id)
         out.append("    question: %s" % e["question"][:70])
         out.append("    divergence: %s  usefulness: %s"
-                   % (m["divergence"], m["actual_usefulness"]))
+                   % (m["divergence"], m["actual_usefulness"]
+                      if m["actual_usefulness"] is not None else "UNMEASURED"))
+        if m["actual_usefulness"] is None:
+            out.append("    usefulness note: %s" % m.get(
+                "usefulness_explanation", "UNMEASURED: usefulness not available"))
     deltas = []
     for i in range(len(exps)):
         for j in range(i + 1, len(exps)):
@@ -179,6 +191,10 @@ def compare(exp_paths):
                 out.append("  delta(%s,%s) = %.3f"
                            % (a["experiment_id"], b["experiment_id"],
                               abs(da - db)))
+            else:
+                out.append("  delta(%s,%s) = UNMEASURED "
+                           "(usefulness not measured for both experiments)"
+                           % (a["experiment_id"], b["experiment_id"]))
     if deltas:
         out.append("  max observed frame delta: %.3f" % max(deltas))
         out.append("")

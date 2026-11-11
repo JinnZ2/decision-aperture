@@ -153,6 +153,14 @@ contains both terms (`lab.explanation_transparent`). Changing the
 friction band changes the score predictably
 (`lab.friction_reduces_usefulness`).
 
+Note 2026-11-11: the original implementation violated the separate
+no-missing-input-substitution contract: `None` friction selected zero
+penalty. The corrected path withholds usefulness, preserves measured
+divergence, and is covered by `lab.missing_friction_unmeasured.*`,
+`lab.unmeasured_survives_json`, and `lab.cli_omitted_friction_unmeasured`.
+The original output remains in the dated
+[correction specimen](fixtures/missing_friction_2026-11-11.json).
+
 **DA_020 -- cross-frame comparison reports deltas, not universal
 rankings. SUPPORTED.** `usefulness_lab.compare` on two experiments
 with different frames reports the numeric delta and explicitly states
@@ -176,6 +184,14 @@ actual. SUPPORTED.** `set_predicted_usefulness` stores the prediction;
 `record_discrimination` computes `usefulness_prediction_delta` when an
 experiment result arrives (`ledger.predicted_vs_actual`). Absence of
 prediction is UNMEASURED, not zero.
+
+Note 2026-11-11: the original delta expression also substituted zero for
+missing actual usefulness. A prediction error now requires both values;
+an incoming unmeasured result resets a previous numeric delta to `None`.
+Explicit measured zero still produces a numeric error
+(`ledger.missing_usefulness_not_zero`,
+`ledger.new_unmeasured_clears_previous_delta`,
+`ledger.measured_zero_keeps_prediction_delta`).
 
 **DA_024 -- the registry_suspect marking is frame-local evidence,
 not a universal verdict. SUPPORTED.** The report language states
