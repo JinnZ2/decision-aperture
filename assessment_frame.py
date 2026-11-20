@@ -1,7 +1,8 @@
 # DESIGN BASIS (requested by repo owner):
 #   property: provenance carried with values (source, locator, hash,
 #             derivation)
-#   reason:   UNSTATED -- ask owner
+#   reason:   "This module cannot verify claims; it can only record them
+#             with provenance." (quoted from this file)
 #   attribute style judgments to this requirement,
 #   not to the authoring model.
 # assessment_frame.py -- CC0, stdlib only, no network, phone-buildable.

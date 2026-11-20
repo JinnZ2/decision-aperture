@@ -2,9 +2,15 @@
 # DESIGN BASIS (requested by repo owner):
 #   property: provenance carried with values (source, locator, hash,
 #             derivation)
-#   reason:   UNSTATED -- ask owner
+#   reason:   "MUST NOT silently resolve a decision. There is exactly one
+#             transition into RESOLVED, and it requires an answer string AND
+#             a provenance field naming who answered" (quoted from this
+#             file)
 #   property: refuses malformed or unsupported input rather than defaulting
-#   reason:   UNSTATED -- ask owner
+#   reason:   "A surface with no answer stays UNRESOLVED. The report prints
+#             unresolved surfaces FIRST, before resolved ones, because the
+#             absence of a decision is the headline, not the footnote."
+#             (quoted from this file)
 #   attribute style judgments to this requirement,
 #   not to the authoring model.
 # decision_ledger.py -- CC0, stdlib only, no network, phone-buildable.
